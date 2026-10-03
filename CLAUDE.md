@@ -23,6 +23,10 @@ Cada cliente lee un archivo distinto; los cinco describen lo mismo y deben coinc
 
 - `skills/<skill>/SKILL.md` es el **único componente portable** entre clientes. `commands/*.md` solo lo ve
   Claude Code (se expone como `/<plugin>:<comando>`). Todo lo que deba funcionar en ChatGPT va en una skill.
+- Los archivos de apoyo de una skill van en `skills/<skill>/references/` y se enlazan desde `SKILL.md` por ruta
+  relativa (convención común a OpenAI y Claude Code; se cargan bajo demanda al activar la skill). Cada archivo
+  lleva una firma arbitraria (`🥐 [ref:fr-01]`) que la skill debe reproducir: si aparece en la respuesta, el
+  archivo se leyó; si falta, el modelo contestó de memoria.
 - Subir de versión implica tocar las cinco ubicaciones. En Claude Code, la `version` de
   `.claude-plugin/plugin.json` pisa a la del catálogo.
 - Las entradas del catálogo Codex llevan `policy.installation` / `policy.authentication` y `category` porque
@@ -61,10 +65,17 @@ Despliegue: `git push` a `main`. ChatGPT sincroniza a diario; para verlo al mome
 **Sync now** en Workspace settings › Plugins y prueba en un **chat nuevo** (los chats abiertos conservan el
 catálogo antiguo).
 
+Estado verificado el 2026-10-03: en ChatGPT la skill de un plugin importado desde GitHub **solo se ejecuta en el
+ámbito Work** (runtime Codex; responde "ejecutándose desde Codex"). En el ámbito Chat el plugin aparece con `@`
+pero el modelo no encuentra la skill. Es un fallo conocido de la plataforma, no del empaquetado
+(github.com/mitjasiska/agentic-workflows/issues/5 y community.openai.com hilos 1380754 y 1400659); no
+reescribir manifiestos para "arreglarlo". Para validar un plugin nuevo, probar en Work o en Codex CLI.
+
 ## Añadir un plugin nuevo
 
 1. Crear `plugins/<nombre>/` con los tres manifiestos (`plugin.json`, `.codex-plugin/plugin.json`,
-   `.claude-plugin/plugin.json`) y al menos `skills/<skill>/SKILL.md`. Copiar `hello-world` como plantilla.
+   `.claude-plugin/plugin.json`) y al menos `skills/<skill>/SKILL.md`. Copiar `hello-world` como plantilla. Si la skill necesita
+   archivos de apoyo, van en `skills/<skill>/references/` enlazados por ruta relativa desde `SKILL.md`.
 2. Añadir la entrada en **ambos** catálogos: `.agents/plugins/marketplace.json` (con `source.path`,
    `policy`, `category`) y `.claude-plugin/marketplace.json` (con `source` relativo).
 3. Nombres en kebab-case; no pueden empezar por `claude-`, `anthropic-` ni `cc-plugin-`.

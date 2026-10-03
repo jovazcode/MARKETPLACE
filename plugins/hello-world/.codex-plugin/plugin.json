@@ -1,7 +1,7 @@
 {
   "name": "hello-world",
-  "version": "0.1.0",
-  "description": "Plugin Hello World mínimo para probar empaquetado y despliegue por marketplace.",
+  "version": "0.2.0",
+  "description": "Plugin Hello World mínimo que saluda en es/en/fr/de a partir de archivos de referencia, para probar empaquetado y despliegue por marketplace.",
   "author": {
     "name": "jovazcode",
     "email": "jovazcode@gmail.com"
@@ -9,17 +9,23 @@
   "homepage": "https://github.com/jovazcode/MARKETPLACE",
   "repository": "https://github.com/jovazcode/MARKETPLACE",
   "license": "MIT",
-  "keywords": ["hello-world", "example", "marketplace"],
+  "keywords": [
+    "hello-world",
+    "example",
+    "marketplace"
+  ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Hello World",
-    "shortDescription": "Saluda con Hello World para comprobar la instalación",
-    "longDescription": "Plugin de prueba. Al invocarlo responde \"Hello World!\" indicando el cliente desde el que se ejecuta y la versión instalada, para verificar que el despliegue por marketplace funciona.",
+    "shortDescription": "Saluda con Hello World en es, en, fr o de",
+    "longDescription": "Plugin de prueba. Saluda en español, inglés, francés o alemán leyendo un archivo de referencia por idioma y devuelve el cliente, la versión y una firma que demuestra que el archivo se ha leído. Sirve para verificar que el despliegue por marketplace y los archivos adjuntos a la skill funcionan.",
     "developerName": "jovazcode",
     "category": "Productivity",
     "websiteURL": "https://github.com/jovazcode/MARKETPLACE",
     "defaultPrompt": [
-      "Saluda con el plugin Hello World"
+      "Saluda con el plugin Hello World",
+      "Saluda en francés con Hello World",
+      "Saluda en alemán con Hello World"
     ]
   }
 }
