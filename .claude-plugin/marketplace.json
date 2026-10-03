@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/marketplace/marketplace.schema.json",
+  "name": "jovazcode-marketplace",
+  "version": "0.1.0",
+  "owner": {
+    "name": "jovazcode",
+    "email": "jovazcode@gmail.com"
+  },
+  "metadata": {
+    "description": "Banco de pruebas de plugins: Hello World y empaquetado mínimo viable para marketplaces."
+  },
+  "plugins": [
+    {
+      "name": "hello-world",
+      "source": "./plugins/hello-world",
+      "description": "Plugin Hello World mínimo para probar empaquetado y despliegue por marketplace.",
+      "version": "0.1.0",
+      "category": "productivity",
+      "keywords": ["hello-world", "example", "marketplace"]
+    }
+  ]
+}

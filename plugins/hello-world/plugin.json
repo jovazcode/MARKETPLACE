@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "hello-world",
+  "version": "0.1.0",
+  "description": "Plugin Hello World mínimo para probar empaquetado y despliegue por marketplace.",
+  "author": {
+    "name": "jovazcode",
+    "email": "jovazcode@gmail.com"
+  },
+  "homepage": "https://github.com/jovazcode/MARKETPLACE",
+  "repository": "https://github.com/jovazcode/MARKETPLACE",
+  "license": "MIT",
+  "keywords": ["hello-world", "example", "marketplace"]
+}
