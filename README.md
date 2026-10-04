@@ -35,8 +35,12 @@ arrancado**. Cómo arrancarlo, publicarlo y probarlo está en su [README](mcp/se
 
 Cada cliente lee la declaración de un sitio distinto: ChatGPT / Codex de `mcp.json` y Claude Code de
 `mcpServers` en `.claude-plugin/plugin.json`. En Claude Code, `/mcp` debe mostrar el servidor `auth` del plugin
-conectado, con la tool `getUserName`. En ChatGPT Business, un plugin que declara MCP Servers queda marcado
-como **Desktop only**.
+conectado, con la tool `getUserName`.
+
+En ChatGPT Business, un plugin que declara MCP Servers queda marcado como **Desktop only** y no funciona en
+web hasta que un admin da de alta el mismo servidor en el workspace (URL `https://io.loanoor.com/mcp`, sin
+autenticación). Con eso basta; el plugin no cambia y la etiqueta Desktop only sigue apareciendo aunque ya
+funcione en web.
 
 ## Instalación
 
@@ -46,6 +50,8 @@ como **Desktop only**.
 2. URL del repositorio: `https://github.com/jovazcode/MARKETPLACE` (sin rama ni subcarpeta).
 3. Autoriza el acceso a GitHub y revisa el resultado de la importación.
 4. Configura la política de instalación del plugin `Hello World` (la importación no la aplica por sí sola).
+   Para usarlo en web, da de alta además el MCP Server `https://io.loanoor.com/mcp` (sin autenticación) en el
+   workspace.
 5. Abre un **chat nuevo** y pide: *"Saluda con el plugin Hello World"* o *"Saluda en francés con Hello World"*.
 
 La sincronización con el repo es diaria; tras un push puedes forzarla con **Sync now**.

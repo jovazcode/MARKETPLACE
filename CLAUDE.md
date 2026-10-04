@@ -91,9 +91,13 @@ pero el modelo no encuentra la skill. Es un fallo conocido de la plataforma, no 
 (github.com/mitjasiska/agentic-workflows/issues/5 y community.openai.com hilos 1380754 y 1400659); no
 reescribir manifiestos para "arreglarlo". Para validar un plugin nuevo, probar en Work o en Codex CLI.
 
-Según la documentación de ChatGPT Enterprise, un plugin importado que declara MCP Servers en `mcp.json` queda
-marcado **Desktop only** (solo app de escritorio); en web el admin tendría que dar de alta el servidor como
-conector aparte. Pendiente de verificar con `hello-world` 0.3.0.
+Estado verificado el 2026-10-04 con `hello-world` 0.3.0: al declarar un MCP Server en `mcp.json`, ChatGPT marca
+el plugin como **Desktop only** y deja de funcionar en web (ámbito Work). Se arregla **sin tocar el plugin**:
+el admin da de alta el mismo servidor en el workspace (URL `https://io.loanoor.com/mcp`, sin autenticación) y
+la skill ya encuentra `getUserName` en web (la llamada llega al servidor Dart). No hace falta `.app.json` ni
+quitar `mcp.json`. La etiqueta **Desktop only sigue visible** aunque funcione: en web la tool llega por el
+servidor registrado en el workspace, no por el `mcp.json` del plugin, así que la etiqueta no es señal de fallo.
+En Claude Code el servidor del plugin conecta solo al instalarlo.
 
 ## Añadir un plugin nuevo
 
