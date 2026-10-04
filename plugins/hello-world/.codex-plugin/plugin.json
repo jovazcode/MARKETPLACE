@@ -1,7 +1,7 @@
 {
   "name": "hello-world",
-  "version": "0.2.0",
-  "description": "Plugin Hello World mínimo que saluda en es/en/fr/de a partir de archivos de referencia, para probar empaquetado y despliegue por marketplace.",
+  "version": "0.3.0",
+  "description": "Plugin Hello World mínimo que saluda por su nombre al usuario (tool getUserName de un MCP Server) en es/en/fr/de a partir de archivos de referencia, para probar empaquetado y despliegue por marketplace.",
   "author": {
     "name": "jovazcode",
     "email": "jovazcode@gmail.com"
@@ -12,13 +12,14 @@
   "keywords": [
     "hello-world",
     "example",
-    "marketplace"
+    "marketplace",
+    "mcp"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Hello World",
-    "shortDescription": "Saluda con Hello World en es, en, fr o de",
-    "longDescription": "Plugin de prueba. Saluda en español, inglés, francés o alemán leyendo un archivo de referencia por idioma y devuelve el cliente, la versión y una firma que demuestra que el archivo se ha leído. Sirve para verificar que el despliegue por marketplace y los archivos adjuntos a la skill funcionan.",
+    "shortDescription": "Saluda por tu nombre en es, en, fr o de",
+    "longDescription": "Plugin de prueba. Pide el nombre del usuario a la tool getUserName de un MCP Server, saluda en español, inglés, francés o alemán leyendo un archivo de referencia por idioma y devuelve el cliente, la versión y una firma que demuestra que el archivo se ha leído. Sirve para verificar que el despliegue por marketplace, los archivos adjuntos a la skill y el MCP Server del plugin funcionan.",
     "developerName": "jovazcode",
     "category": "Productivity",
     "websiteURL": "https://github.com/jovazcode/MARKETPLACE",

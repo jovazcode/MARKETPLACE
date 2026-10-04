@@ -7,7 +7,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Banco de pruebas de empaquetado y despliegue de plugins vía catálogos de marketplace. La raíz del repo es
 el **catálogo** (`jovazcode-marketplace`, publicado en `github.com/jovazcode/MARKETPLACE`) y cada plugin vive
 en `plugins/<nombre>/`. Debe seguir siendo importable a la vez en **ChatGPT Business / Codex** y en
-**Claude Code**; no hay código ejecutable, solo manifiestos JSON y Markdown.
+**Claude Code**. Bajo `plugins/` no hay código ejecutable, solo manifiestos JSON y Markdown; el único código
+es el de los MCP Servers de prueba en `mcp/servers/<nombre>/` (Dart + `mcp_dart`), fuera de lo que leen los
+importadores.
 
 ## Arquitectura de manifiestos
 
@@ -27,6 +29,17 @@ Cada cliente lee un archivo distinto; los cinco describen lo mismo y deben coinc
   relativa (convención común a OpenAI y Claude Code; se cargan bajo demanda al activar la skill). Cada archivo
   lleva una firma arbitraria (`🥐 [ref:fr-01]`) que la skill debe reproducir: si aparece en la respuesta, el
   archivo se leyó; si falta, el modelo contestó de memoria.
+- Un MCP Server del plugin se declara **dos veces**, una por cliente, con la misma clave de servidor y URL:
+  `plugins/<p>/mcp.json` (Codex/ChatGPT: `$schema` obligatorio, `"type": "streamable-http"`, solo `url` y
+  `headers`) y `mcpServers` inline en `.claude-plugin/plugin.json` (`"type": "http"`). Al existir `plugin.json`
+  raíz con `$schema`, Codex ignora cualquier `mcpServers` de `.codex-plugin/plugin.json` y cualquier `.mcp.json`.
+  En Claude Code la tool se llama `mcp__plugin_<plugin>_<servidor>__<tool>`; en la skill se nombra la tool a
+  secas (`getUserName`) para que sirva en todos los clientes.
+- `hello-world` usa el servidor `auth` ([mcp/servers/auth/](mcp/servers/auth/)), publicado en
+  `https://io.loanoor.com/mcp` por un proxy de Apache hacia el desktop vía Tailscale: solo responde mientras
+  el servidor Dart está arrancado. Sin él, la skill debe devolver el saludo anónimo con el aviso
+  `(getUserName no disponible; saludo anónimo.)`.
+- Las referencias de la skill repiten la versión (`v0.3.0`): subir de versión también las toca.
 - Subir de versión implica tocar las cinco ubicaciones. En Claude Code, la `version` de
   `.claude-plugin/plugin.json` pisa a la del catálogo.
 - Las entradas del catálogo Codex llevan `policy.installation` / `policy.authentication` y `category` porque
@@ -45,6 +58,13 @@ const cc=r(".claude-plugin/marketplace.json"),cx=r(".agents/plugins/marketplace.
 const vs=new Set([...p.map(x=>x.version),cc.plugins[0].version]);
 console.log(vs.size===1?"OK version "+[...vs][0]:"VERSION MISMATCH "+[...vs]);
 console.log(cc.name===cx.name?"OK marketplace name":"MARKETPLACE NAME MISMATCH");'
+```
+
+MCP Server (hay SDK de Dart en esta máquina):
+
+```bash
+cd mcp/servers/auth && dart pub get && dart analyze
+PORT=3939 dart run bin/server.dart                    # loopback; pruebas con curl en su README
 ```
 
 Con los CLIs instalados:
@@ -70,6 +90,10 @@ Estado verificado el 2026-10-03: en ChatGPT la skill de un plugin importado desd
 pero el modelo no encuentra la skill. Es un fallo conocido de la plataforma, no del empaquetado
 (github.com/mitjasiska/agentic-workflows/issues/5 y community.openai.com hilos 1380754 y 1400659); no
 reescribir manifiestos para "arreglarlo". Para validar un plugin nuevo, probar en Work o en Codex CLI.
+
+Según la documentación de ChatGPT Enterprise, un plugin importado que declara MCP Servers en `mcp.json` queda
+marcado **Desktop only** (solo app de escritorio); en web el admin tendría que dar de alta el servidor como
+conector aparte. Pendiente de verificar con `hello-world` 0.3.0.
 
 ## Añadir un plugin nuevo
 

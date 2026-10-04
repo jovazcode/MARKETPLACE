@@ -3,13 +3,19 @@
 ## Line 1 — greeting
 
 ```
+Hello, {usuario}! 👋
+```
+
+Without a user name (the `getUserName` tool is not available):
+
+```
 Hello, World! 👋
 ```
 
 ## Line 2 — status
 
 ```
-Plugin hello-world v0.2.0 running from {cliente}.
+Plugin hello-world v0.3.0 running from {cliente}.
 ```
 
 ## Line 3 — signature
@@ -20,5 +26,7 @@ Plugin hello-world v0.2.0 running from {cliente}.
 
 ## Rules
 
-- Comma after "Hello"; "World" capitalised; single exclamation mark with no space before it.
+- Comma after "Hello"; the name exactly as the tool returns it, not translated or re-capitalised; single
+  exclamation mark with no space before it.
+- In the greeting without a name, "World" capitalised.
 - Keep it friendly and brief.

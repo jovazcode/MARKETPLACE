@@ -4,7 +4,9 @@ Banco de pruebas para empaquetar y desplegar plugins a través de catálogos de 
 Un único repositorio sirve de catálogo para **ChatGPT Business / Codex** y para **Claude Code**,
 siguiendo el patrón de repos como [AvdLee/SwiftUI-Agent-Skill](https://github.com/AvdLee/SwiftUI-Agent-Skill).
 
-Primer plugin: `hello-world`, un saludo mínimo que confirma que la instalación funciona.
+Primer plugin: `hello-world`, un saludo mínimo que confirma que la instalación funciona. Desde la 0.3.0 saluda
+por nombre: el nombre lo devuelve la tool `getUserName` de un MCP Server propio escrito en Dart, declarado
+dentro del plugin.
 
 ## Estructura
 
@@ -15,12 +17,26 @@ plugins/
 └── hello-world/
     ├── plugin.json                  # manifiesto portable (Agent Plugins 1.0)
     ├── .codex-plugin/plugin.json    # overlay Codex: nombre visible, categoría, prompts sugeridos
-    ├── .claude-plugin/plugin.json   # manifiesto Claude Code
+    ├── .claude-plugin/plugin.json   # manifiesto Claude Code (incluye mcpServers)
+    ├── mcp.json                     # MCP Servers del plugin para ChatGPT / Codex
     ├── skills/hello-world/
     │   ├── SKILL.md                 # la skill, común a todos los clientes
     │   └── references/{es,en,fr,de}.md  # reglas de saludo por idioma (archivos adjuntos a la skill)
     └── commands/hello.md            # slash command, solo Claude Code
+mcp/servers/
+└── auth/                            # MCP Server en Dart (mcp_dart): tool getUserName, sin autenticación
 ```
+
+## MCP Server
+
+El plugin apunta a `https://io.loanoor.com/mcp`. Ese endpoint es un proxy de Apache hacia el servidor Dart de
+[mcp/servers/auth/](mcp/servers/auth/), que corre en un desktop: **solo responde mientras el servidor está
+arrancado**. Cómo arrancarlo, publicarlo y probarlo está en su [README](mcp/servers/auth/README.md).
+
+Cada cliente lee la declaración de un sitio distinto: ChatGPT / Codex de `mcp.json` y Claude Code de
+`mcpServers` en `.claude-plugin/plugin.json`. En Claude Code, `/mcp` debe mostrar el servidor `auth` del plugin
+conectado, con la tool `getUserName`. En ChatGPT Business, un plugin que declara MCP Servers queda marcado
+como **Desktop only**.
 
 ## Instalación
 
@@ -71,12 +87,22 @@ Prueba con `/hello-world:hello` o `/hello-world:hello fr`. Para un equipo, en `.
 ## Resultado esperado
 
 La skill elige idioma (el pedido explícitamente; si no, el del mensaje; si no hay archivo, `en.md` con aviso),
-lee `references/<idioma>.md` y devuelve exactamente lo que dicta ese archivo. Por ejemplo, "Saluda en francés":
+lee `references/<idioma>.md`, pide el nombre a `getUserName` y devuelve exactamente lo que dicta ese archivo.
+Por ejemplo, "Saluda en francés" con el servidor devolviendo `jovaz`:
+
+```
+Bonjour, jovaz ! 👋
+Plugin hello-world v0.3.0 exécuté depuis <Claude Code | ChatGPT | Codex>.
+🥐 [ref:fr-01]
+```
+
+Si el MCP Server no está conectado, el nombre no se inventa: sale el saludo anónimo con un aviso.
 
 ```
 Bonjour, le Monde ! 👋
-Plugin hello-world v0.2.0 exécuté depuis <Claude Code | ChatGPT | Codex>.
+Plugin hello-world v0.3.0 exécuté depuis <Claude Code | ChatGPT | Codex>.
 🥐 [ref:fr-01]
+(getUserName no disponible; saludo anónimo.)
 ```
 
 La tercera línea es la **firma** del archivo (`🌞 [ref:es-01]`, `🫖 [ref:en-01]`, `🥐 [ref:fr-01]`,

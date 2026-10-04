@@ -1,0 +1,13 @@
+name: auth_mcp_server
+description: MCP Server v1-alpha (sin autenticación) que expone la tool getUserName para el plugin hello-world.
+version: 1.0.0-alpha
+publish_to: none
+
+environment:
+  sdk: ^3.4.0
+
+dependencies:
+  mcp_dart: ^2.4.2
+
+dev_dependencies:
+  lints: ^5.0.0
